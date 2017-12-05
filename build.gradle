@@ -52,6 +52,11 @@ dependencies {
     //工具类
 	compile 'com.alibaba:fastjson:1.2.41'
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
+	
+	//jdbc
+	//数据库连接池
+	compile 'com.zaxxer:HikariCP-java7:2.4.13'
+	compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.40'
 
     // Use JUnit test framework
     testCompile 'junit:junit:4.12'
