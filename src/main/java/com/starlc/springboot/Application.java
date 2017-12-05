@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (C) 2014 xx
+ * Copyright (C) 2017 starlc
  *****************************************************************************/
 
 package com.starlc.springboot;
@@ -10,9 +10,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * xx
  *
- * @author xx
- * @since jdk1.6
- * @version 2017年11月30日 xx
+ * @author starlc
+ * @since jdk1.7
+ * @version 2017年11月30日 starlc
  */
 @SpringBootApplication
 public class Application {

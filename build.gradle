@@ -1,9 +1,18 @@
 buildscript {
     ext {
-        springBootVersion = '1.5.3.RELEASE'
+        springBootVersion = '1.5.9.RELEASE'
     }
     repositories {
-        mavenCentral()
+        //阿里云maven
+		maven{
+			url "http://maven.aliyun.com/nexus/content/groups/public/"
+		}
+		//mybatis
+		maven {
+			url "https://oss.sonatype.org/content/repositories/snapshots"
+		}
+		mavenCentral()
+		jcenter()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -19,7 +28,7 @@ jar {
     version = '0.0.1-SNAPSHOT'
 }
 
-sourceCompatibility = 1.8
+sourceCompatibility = 1.7
 
 repositories {
     mavenCentral()
@@ -34,7 +43,18 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-rest')
 
     compile('com.h2database:h2')
+    
+    compile 'org.mybatis:mybatis:3.2.8'
+	
+	//23版本依赖jdk1.8
+    compile 'com.google.guava:guava:19.0'
+    
+    //工具类
+	compile 'com.alibaba:fastjson:1.2.41'
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
 
+    // Use JUnit test framework
+    testCompile 'junit:junit:4.12'
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
 }
