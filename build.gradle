@@ -52,6 +52,11 @@ dependencies {
     //工具类
 	compile 'com.alibaba:fastjson:1.2.41'
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
+	compile group: 'commons-io', name: 'commons-io', version: '2.6'
+	compile group: 'commons-jxpath', name: 'commons-jxpath', version: '1.3'
+	compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
+	compile group: 'commons-net', name: 'commons-net', version: '3.6'
+	compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.3.3'
 	
 	//jdbc
 	//数据库连接池
