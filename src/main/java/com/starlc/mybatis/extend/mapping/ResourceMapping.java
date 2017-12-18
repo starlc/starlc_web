@@ -1,21 +1,25 @@
 /******************************************************************************
-* Copyright (C) 2017 Starlc
-*****************************************************************************/
- 
-package com.starlc.mybatis.extend.mapping; 
+ * Copyright (C) 2017 Starlc
+ *****************************************************************************/
+
+package com.starlc.mybatis.extend.mapping;
 
 /**
  * 类注释信息
- * @Description:   TODO(用一句话描述该文件做什么) 
  * 
- * @author   starlc
- * @since	 jdk1.7
- * @version  V-0.1
- * @Date     2017年12月5日 starlc      
+ * @Description: TODO(用一句话描述该文件做什么)
+ * 
+ * @author starlc
+ * @since jdk1.7
+ * @version V-0.1
+ * @Date 2017年12月5日 starlc
  */
 public class ResourceMapping {
-private String path;
     
+    /** FIXME */
+    private String path;
+    
+    /** FIXME */
     private long fileTime;
     
     /**
@@ -28,8 +32,8 @@ private String path;
     /**
      * 构造函数
      * 
-     * @param path
-     * @param fileTime
+     * @param path xx
+     * @param fileTime xx
      */
     public ResourceMapping(String path, long fileTime) {
         this.path = path;
@@ -64,4 +68,3 @@ private String path;
         this.fileTime = fileTime;
     }
 }
- 
