@@ -23,7 +23,7 @@ String.prototype.format = function(args) {
     return result;
 }
 
-/两种调用方式
+//两种调用方式
 /*var template1="我是{0}，今年{1}了";
 var template2="我是{name}，今年{age}了";
 var result1=template1.format("loogn",22);
