@@ -22,6 +22,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.starlc.base.orm.util.SpringBeanContextUtil;
 import com.starlc.runtime.spring.util.SpringContextUtil;
 
 
@@ -75,7 +76,7 @@ public class SpringBeanRegisterUtil {
      * @return BeanDefinitionRegistry
      */
     private static BeanDefinitionRegistry getSpringBeanRegistry() {
-        ApplicationContext context = SpringContextUtil.getApplicationContext();
+        ApplicationContext context = SpringBeanContextUtil.getApplicationContext();
         @SuppressWarnings("resource")
         ConfigurableApplicationContext configurableContext = (ConfigurableApplicationContext) context;
         BeanDefinitionRegistry beanDefinitionRegistry = (DefaultListableBeanFactory) configurableContext
