@@ -1,0 +1,401 @@
+<!--
+/**********************************************************************
+* 图片上传测试编辑页面
+* 2018-02-06 CAP超级管理员 新建
+**********************************************************************/
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="edge" />
+    <title>图片上传测试编辑页面</title>
+    <link rel="stylesheet" type="text/css" href="/cap/rt/common/base/css/base.css"/>
+    <link rel="stylesheet" type="text/css" href="/cap/rt/common/base/css/comtop.cap.rt.css"/>
+    <link rel="stylesheet" type="text/css" href="/cap/rt/common/cui/themes/default/css/comtop.ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/cap/demo/css/base.css"/>
+    <style type="text/css">
+    	.cap-page{
+    		width: 1024px;
+    	}
+    </style>
+	<script type="text/javascript" src="/cap/rt/common/base/js/jquery.js"></script>
+	<script type="text/javascript" src="/cap/rt/common/base/js/comtop.cap.ajax.js"></script>
+	<script type="text/javascript" src="/cap/rt/common/globalVars.js"></script>
+	<script type="text/javascript" src="/cap/rt/common/cui/js/comtop.ui.min.js"></script>
+	<script type="text/javascript" src="/cap/rt/common/base/js/comtop.cap.utils.js"></script>
+	<script type="text/javascript" src="/cap/rt/common/base/js/comtop.cap.rt.js"></script>
+	<script type="text/javascript" src="/cap/rt/common/cui/js/cui.utils.js"></script>
+</head>
+<body>
+<div id="pageRoot" class="cap-page">
+	<div class="cap-area" style="width:100%;">
+	<table id="tableid-34423556085675955" class="cap-table-fullWidth header-area" >
+		<tr id="trid-9196089173201472">
+			<td id="tdid-5912058073095977" class="cap-td" style="text-align:right;"  >
+            	<span id="btnSave" uitype="Button" ></span>
+            	<span id="btnBackTo" uitype="Button" ></span>
+			</td>
+		</tr>
+	</table>
+	<table id="tableid-form_7406818956279949" class="cap-table-fullWidth " >
+		<tr id="trid-07314377707830477">
+			<td id="tdid-5822970960516562" class="cap-td" style="height:200px;width:260px;" colspan='1' rowspan='2'>
+            	<div id="uiid-14871494853373735" uitype="CodeArea" ><a id='preClick' class='ibx-cal-ditem-addbtn' onclick='clickUpload()'>    <span class='ibx-cal-ditem-addicon'>    </span>    上传图片</a><input type='file' id='basicInfoHead' style='display:none' name='file'/><input type='hidden' id='basicHeadUrl'><div id='imgpath' style='display:none'>    <image id='img1' style='width:260px;height:200px' src=''></div></div>
+			</td>
+			<td id="tdid-07108108739086871" class="cap-td" style="text-align:right;width:20%;"  >
+            	<span id="uiid-07718723887922952" uitype="Label" ></span>
+			</td>
+			<td id="tdid-09642769040566428" class="cap-td" style="text-align:left;width:30%;" colspan='1' >
+            	<span id="uiid-030326357385369473" uitype="Input" ></span>
+			</td>
+			<td id="tdid-06719044077930553" class="cap-td" style="text-align:right;width:20%;"  >
+            	<span id="uiid-0031975128762063654" uitype="Label" ></span>
+			</td>
+			<td id="tdid-043220660086544416" class="cap-td" style="text-align:left;width:30%;" colspan='1' >
+            	<span id="uiid-06334004869901478" uitype="Input" ></span>
+			</td>
+		</tr>
+		<tr id="trid-05180685390059746">
+			<td id="tdid-04811179597695592" class="cap-td" style="text-align:right;width:20%;"  >
+            	<span id="uiid-019015272859184995" uitype="Label" ></span>
+			</td>
+			<td id="tdid-0746402979406141" class="cap-td" style="text-align:left;width:30%;" colspan='1' >
+            	<span id="uiid-07778964601558169" uitype="Input" ></span>
+			</td>
+			<td id="tdid-005938379049700471" class="cap-td" style="text-align:right;width:20%;"  >
+            	<span id="uiid-06929762354806382" uitype="Label" ></span>
+			</td>
+			<td id="tdid-06121985870810475" class="cap-td" style="text-align:left;width:30%;" colspan='1' >
+            	<span id="uiid-020637705659019967" uitype="Input" ></span>
+			</td>
+		</tr>
+	</table>
+	</div>
+</div>
+</body>
+<script type="text/javascript">
+cap.dicDatas = [];
+var primaryValue = cui.utils.param["primaryValue"];
+var pageMode = cui.utils.param["pageMode"];
+var environmentVariable = {};
+var pageParam = {};
+var pageConstantList = {};
+var scatterImage = {};
+var imageTestListPage = '/qdym/ImageTestListPage.html';
+
+//页面初始化数据加载行为 页面初始化数据加载行为
+function pageInitLoadData(){
+	//TODO 用户行为数据采集专用编辑区，请勿在此填写业务代码
+
+	//TODO 加载数据前操作
+	initImage();
+	var paramArray =[];
+	cap.formId = primaryValue;
+	var param = "primaryValue";
+    if (param) {
+       paramArray = param.split(",");
+    }
+	if(!cap.isUndefinedOrNullOrBlank(cap.formId) && paramArray.length>0){
+		//获取访问url
+		var url = '/shscht/shqzImage/loadById/'+primaryValue;
+		var data = '';
+		
+		cap.ajax.get(url,data,{async:false,dataType: "json"})
+		.success(function (result){
+			//TODO 数据设置前操作
+
+			scatterImage=result;
+			//TODO 数据设置后操作
+			showImage(scatterImage.filePath);
+		})
+		.error( function(XMLHttpRequest, textStatus, errorThrown) {
+			//TODO 后台异常信息回调
+
+		});
+	}else{
+		var defaultValue = {};
+		var expression = "default";
+		//TODO 改变expression
+
+		switch (expression){
+			case "default":
+				defaultValue = cap.getURLParameter("scatterImage");
+				//TODO 修改或格式化defaultValue
+
+				break;
+			//TODO 增加case控制
+
+		}
+		scatterImage = defaultValue ? defaultValue : {};
+	}
+	//TODO 数据加载完成后操作
+
+}
+
+//保存表单行为 保存表单行为
+function saveForm(){
+	//TODO 用户行为数据采集专用编辑区，请勿在此填写业务代码
+
+	//校验前操作
+	
+	var saveContinue=2;
+	if(cap.validateForm("message")){
+		cap.beforeSave();
+		//提交数据前操作
+		scatterImage.filePath =$("#basicHeadUrl").val();
+		//获取访问url
+		var url = '/shscht/shqzImage/save';
+		var data = scatterImage;
+		var result;
+		//调用后台查询
+		cap.ajax.post(url,data,{async:false,dataType: "text"})
+		.success(function (_result){
+			//赋值前操作
+			result = _result;
+			if(""!="scatterImage.id"){
+				eval("scatterImage.id=_result");
+			}
+
+			
+			//默认保存成功
+			var type = 'success';
+			var message = '保存成功！';
+
+			cui.message(message, type,{'callback':function(){
+				//回调的操作
+
+				if(type != "success"){
+					return;
+				}
+				var pWindow = cap.searchParentWindow("reloadGridData");
+				if(pWindow && typeof pWindow["reloadGridData"] === "function"){
+					pWindow["reloadGridData"]();
+				}
+				if(saveContinue==1){
+					window.location=window.location;
+				}else if(saveContinue==2){
+					window.close();
+				}else if(saveContinue==4){
+					var reloadURL = window.location.href;
+					var localURL = window.location.href;
+					var primaryValue = eval('scatterImage.id');
+					if(localURL.indexOf("?")>0){
+						if(localURL.indexOf("primaryValue")<0){
+							reloadURL = localURL +"&primaryValue="+primaryValue; 
+						}
+					}else{
+						reloadURL = localURL +"?primaryValue="+primaryValue; 
+					}
+					window.location.href=reloadURL;
+				}
+			}});
+
+		})
+		.error( function(XMLHttpRequest, textStatus, errorThrown) {
+			//TODO 后台异常信息回调
+		   var type = 'error';
+		   var message ="保存失败,存在异常信息:"+errorThrown.message;
+
+		   cui.message(message);
+
+		});
+	//TODO 可自定义设置返回值
+
+	}
+}
+
+/*
+ * 点击按钮跳转页面 点击按钮跳转页面
+ *
+ * @param event 当前事件对象
+ * @param self 当前button对象
+ * @param mark 传入的参数
+ */
+function backTo(event, self, mark) { 
+	//TODO 用户行为数据采集专用编辑区，请勿在此填写业务代码
+
+	var pageJumpURL=cap.getforwardURL(imageTestListPage);
+	var container=window;
+	//TODO  调用后台前处理逻辑
+
+	//带查询条件返回设置
+  	var saveQueryData='yes';
+  	 if(saveQueryData=='yes'){
+  		pageJumpURL=cap.buildURL(pageJumpURL,{});
+  	}
+  	//当打开的页面为新窗口，并且当前window实现了backTo_pageJump方法，则调用backTo_pageJump方法来打开新页面
+  	var _openWindow = window["backTo_pageJump"]; 
+  	if("location" == "win" && _openWindow && typeof(_openWindow) == "function"){
+  		_openWindow(pageJumpURL);
+  	}else{
+		cap.pageJump(pageJumpURL,"location",container);
+  	}
+}
+
+//初始化图片控件 自定义形参,多个参数使用英文逗号隔开
+function initImage(params){
+	//TODO 用户行为数据采集专用编辑区，请勿在此填写业务代码
+
+	//TODO 用户自定义行为
+	registerImageUpload();
+	$('#img1').on("click",function(){
+		clickUpload();
+    });
+}
+
+//模拟点击文件选择框 用户自定义行为
+function clickUpload(params){
+	//TODO 用户行为数据采集专用编辑区，请勿在此填写业务代码
+
+	//TODO 用户自定义行为
+	$("#basicInfoHead").trigger("click");
+}
+
+//检查选择文件是否图片 用户自定义行为
+function checkIsImage(params){
+	//TODO 用户行为数据采集专用编辑区，请勿在此填写业务代码
+
+	//TODO 用户自定义行为
+	var filepath=$("#basicInfoHead").val();
+		if(!filepath){
+			return false;
+		}
+		var extStart=filepath.lastIndexOf(".");
+		var ext=filepath.substring(extStart,filepath.length).toUpperCase();
+		if(ext!=".BMP"&&ext!=".PNG"&&ext!=".GIF"&&ext!=".JPG"&&ext!=".JPEG"){
+			return false;
+		}
+		return true;
+}
+
+//注册图片上传事件 用户自定义行为
+function registerImageUpload(params){
+	//TODO 用户行为数据采集专用编辑区，请勿在此填写业务代码
+
+	//TODO 用户自定义行为
+	$('#basicInfoHead').on("change",function(){
+      	  if($("#basicInfoHead").val()==''){return;}
+			if(!checkIsImage()){
+				alert("图片限于png,gif,jpeg,jpg格式");
+				return;
+			}else{
+            //效验通过，图片上传
+				var fileM = document.querySelector("#basicInfoHead");
+				var fileName = fileM.files[0].name;
+				showImage(fileName);
+			}
+	    });
+}
+
+//显示图片 用户自定义行为
+function showImage(params){
+	//TODO 用户行为数据采集专用编辑区，请勿在此填写业务代码
+
+	//TODO 用户自定义行为
+	 $('#basicHeadUrl').val(params);
+    $("#img1").attr("src", '/cap/demo/img/qiche/'+params);
+    $("#imgpath").show();
+    $("#preClick").css("display","none");
+}
+
+//页面初始化状态
+function pageInitState(){
+    if(pageMode=='readonly'){
+	    cap.setUIState('btnSave', "hide");
+        cap.disValid('btnSave', true);
+    }
+}
+        
+jQuery(document).ready(function(){
+	cap.beforePageInit.fire();
+	cap.executeFunction("pageInitBeforeProcess");
+	if(window['pageMode'] == "textmode" || window['pageMode'] == "readonly"){
+		comtop.UI.scan[pageMode]=true;
+	}
+	comtop.UI.scan();
+	cap.executeFunction("pageInitLoadData");
+	cap.pageInit();
+	pageInitState();
+	cap.executeFunction("pageInitAfterProcess");
+});
+    
+//页面控件属性配置
+var uiConfig={
+    "btnSave":{
+        "on_click":saveForm,
+        "id":"btnSave",
+        "uitype":"Button",
+        "label":"保存",
+        "name":"btnSave"
+    },
+    "btnBackTo":{
+        "on_click":backTo,
+        "id":"btnBackTo",
+        "uitype":"Button",
+        "label":"返回",
+        "name":"btnBackTo"
+    },
+    "uiid-14871494853373735":{
+        "id":"uiid-14871494853373735",
+        "uitype":"CodeArea",
+        "text":"<a id='preClick' class='ibx-cal-ditem-addbtn' onclick='clickUpload()'>    <span class='ibx-cal-ditem-addicon'>    </span>    上传图片</a><input type='file' id='basicInfoHead' style='display:none' name='file'/><input type='hidden' id='basicHeadUrl'><div id='imgpath' style='display:none'>    <image id='img1' style='width:260px;height:200px' src=''></div>",
+        "height":"200px",
+        "width":"260px"
+    },
+    "uiid-07718723887922952":{
+        "value":"id",
+        "uitype":"Label",
+        "label":"id",
+        "isReddot":true,
+        "name":"idLabel"
+    },
+    "uiid-030326357385369473":{
+        "uitype":"Input",
+        "validate":[{"type":"required","rule":{"m":"id不能为空"}},{"type":"length","rule":{"max":36,"maxm":"id长度不能大于36个字符"}}],
+        "name":"id",
+        "databind":"scatterImage.id"
+    },
+    "uiid-0031975128762063654":{
+        "value":"name",
+        "uitype":"Label",
+        "label":"name",
+        "isReddot":false,
+        "name":"nameLabel"
+    },
+    "uiid-06334004869901478":{
+        "uitype":"Input",
+        "validate":[{"type":"length","rule":{"max":30,"maxm":"name长度不能大于30个字符"}}],
+        "name":"name",
+        "databind":"scatterImage.name"
+    },
+    "uiid-019015272859184995":{
+        "value":"type",
+        "uitype":"Label",
+        "label":"type",
+        "isReddot":false,
+        "name":"typeLabel"
+    },
+    "uiid-07778964601558169":{
+        "uitype":"Input",
+        "validate":[{"type":"length","rule":{"max":30,"maxm":"type长度不能大于30个字符"}}],
+        "name":"type",
+        "databind":"scatterImage.type"
+    },
+    "uiid-06929762354806382":{
+        "value":"imgData",
+        "uitype":"Label",
+        "label":"imgData",
+        "isReddot":false,
+        "name":"imgDataLabel"
+    },
+    "uiid-020637705659019967":{
+        "uitype":"Input",
+        "validate":[{"type":"length","rule":{"max":65535,"maxm":"imgData长度不能大于65535个字符"}}],
+        "name":"imgData",
+        "databind":"scatterImage.imgData"
+    }
+}
+
+</script>
+</html>
