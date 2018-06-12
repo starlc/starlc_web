@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- 开发环境版本，包含了用帮助的命令行警告 -->
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+</head>
+<body>
+	<div id="log">
+	  <h3>Content:</h3>
+	</div>
+</body>
+
+<script type="text/javascript">
+	function asyncEvent() {
+	  var dfd = jQuery.Deferred();
+	 
+	  // Resolve after a random interval
+	  setTimeout(function() {
+	    //dfd.resolve( "hurray" );
+	    dfd.resolveWith({a:1} ,["hurray"] );
+	  }, Math.floor( 400 + Math.random() * 2000 ) );
+	 
+	  // Reject after a random interval
+	  setTimeout(function() {
+	    dfd.reject( "sorry" );
+	  }, Math.floor( 400 + Math.random() * 2000 ) );
+	 
+	  // Show a "working..." message every half-second
+	  function working() {
+	    if ( dfd.state() === "pending" ) {
+	      console.log("working...");
+	      dfd.notify( "working... " );
+	      setTimeout( working, 100 );
+	    }
+	  }
+
+	  setTimeout(working, 1 );
+	 
+	  // Return the Promise so caller can't change the Deferred
+	  console.log("answer promise:",dfd.state());
+	  dfd.always(function(){
+	  	console.log("已执行");
+	  });
+	  return dfd.promise();
+	}
+	 
+	// Attach a done, fail, and progress handler for the asyncEvent
+	$.when( asyncEvent() ).then(
+	  function( status ) {
+	  	console.log(this);
+	    alert( status + ", things are going well" );
+	  },
+	  function( status ) {
+	    alert( status + ", you fail this time" );
+	  },
+	  function( status ) {
+	  	console.log("status",status);
+	    $( "body" ).append( status );
+	  }
+	);
+
+
+	//$.Deferred的resolveWith(context[, args]).如：
+	var dtd = $.Deferred();
+
+	function car(age, name) {
+		this.age = age;
+		this.name = name
+	};
+	dtd.done(car);
+	var obj = {};
+	dtd.resolveWith(obj, [8, "jeep"]);
+	console.log(obj.age + "," + obj.name)
+
+
+	//{{cname}}
+	function {{ename}}(ui, args) {
+	 	// ui:   组件实例;args: 参数
+		<script name="before"/>
+	var area = [];
+	ui.$el.find("li").each(function() {
+		var dataArgs = $(this).data("args");
+		if (dataArgs && dataArgs["relatedArea"]) {
+			area.push.apply(area, dataArgs["relatedArea"].split(";"));
+		}
+	})
+	//隐藏关联的全部区域
+	$.each(area, function(index, val) {
+		$("#" + val).hide();
+	})
+
+	if (args.args.relatedArea) {
+
+	}
+	if (args.args.url) {
+		var container = "#" + args.args.relatedArea;
+		$(container).empty();
+		$(container).load(args.args.url);
+		//$("#divid-633979787760809").html("<iframe src="+args.args.url+"></iframe>");
+		$(container).show();
+	} else if (args.args.relatedArea) {
+		$.each(args.args.relatedArea.split(";"), function(idx, val) {
+			$("#" + val).show();
+		});
+	}
+	}
+</script>
+</html>
