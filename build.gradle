@@ -24,8 +24,8 @@ task copyAllDependencies(type: Copy) {
      group "copy jar"
      description "拷贝工程里的所有依赖到allLibs下面"
      //referring to the 'compile' configuration
-     from configurations.compile
-     into 'allLibs'
+     //from configurations.compile
+     //into 'allLibs'
 }
 
 
@@ -93,6 +93,9 @@ dependencies {
 	//数据库连接池
 	compile 'com.zaxxer:HikariCP-java7:2.4.13'
 	compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.40'
+	
+	 //mongo驱动
+    compile 'org.mongodb:mongo-java-driver:3.8.0'
 	
 	//日志
 	//LOG日志相关工具包
