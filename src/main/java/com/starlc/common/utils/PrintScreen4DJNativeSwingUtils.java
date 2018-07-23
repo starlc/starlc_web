@@ -176,6 +176,6 @@ public class PrintScreen4DJNativeSwingUtils extends JPanel {
 
     public static void main(String[] args) {  
 
-        PrintScreen4DJNativeSwingUtils.printUrlScreen2jpg("1123.jpg", "huazan.org/sz/wechat/index", 375, 667);
+        PrintScreen4DJNativeSwingUtils.printUrlScreen2jpg("1123.jpg", "https://download.csdn.net/download/sunnyjerry/9998387", 1024, 1024);
     }  
 }

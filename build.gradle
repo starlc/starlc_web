@@ -95,7 +95,7 @@ dependencies {
 	compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.40'
 	
 	 //mongo驱动
-    compile 'org.mongodb:mongo-java-driver:3.8.0'
+    //compile 'org.mongodb:mongo-java-driver:3.8.0'
 	
 	//日志
 	//LOG日志相关工具包
