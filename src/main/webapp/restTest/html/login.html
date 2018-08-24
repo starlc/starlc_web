@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <title>xxxx测试</title>
+    <link rel="stylesheet" type="text/css" href="../common/cui/themes/default/css/comtop.ui.min.css"/>
+	<link rel="stylesheet" type="text/css" href="../common/jsoneditor/css/jsoneditor.css"/>
+	<script  type="text/javascript"  src="../common/requirejs/require.js"></script>
+    <script  type="text/javascript"  src="../common/jquery/js/jquery.js"></script>
+	<script  type="text/javascript"  src="../common/requirejs/require.config.js"></script>
+    <script type="text/javascript" src="../common/cui/js/comtop.ui.all.js"></script>
+	<style type="text/css">
+        body {
+            color: rgb(51, 51, 51);
+            font: 14px/2em consolas, "Courier New", 微软雅黑, sans-serif;
+            margin: 0;
+        }
+        div {
+            display: block;
+        }
+        pre {
+            border : 0;
+            padding : 0 0 0 10px;
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            font: 12px/2em consolas, "Courier New", 微软雅黑, sans-serif;
+            white-space: pre-wrap;
+            white-space: -moz-pre-wrap;
+            white-space: -pre-wrap;
+            white-space: -o-pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+        }
+        .field{
+            padding-bottom: 10px;
+            font-size: 12px;
+        }
+	</style>
+</head>
+<body>
+    <div uitype="Borderlayout" id="border" is_root="false">
+        <div position="top" height="240" style="position:relative;overflow: hidden;">
+            <div style="font-size: 16px;font-weight: bold;">xxxxx</div>
+            <div style="font-size: 14px;font-weight: bold;background-color: #00b7ee;">xxxx</div>
+            <div id="code" style="height: 160px;padding: 5px"></div>
+        </div>
+        <div position="center" style="position:relative;overflow: hidden;height: 176px;">
+            <div style="height: 10px"></div>
+            <div style="font-size: 14px;font-weight: bold;background-color: #00b7ee;">测试设置</div>
+            <div style="padding-top: 10px">
+                <div class="field">
+                   <div style="width:100%"><span>地址:</span> <span uitype="Input" id="cloud" name="cloud" width="400px"
+                        validate="访问地址不能为空" value="http://10.10.11.184/api/dddd" ></span></div>
+                </div>
+                <div class="field">
+                   <div style="width:100%"> <span>CCC地址:</span> <span uitype="Input" id="cap" name="ccc"  width="400px" style="padding-left: 16px"
+                        validate="CCC访问地址不能为空" value="http://10.10.93.104:8080/web/ccc/ptc/index/CCCIndex.jsp"></span>
+                   </div>
+                </div>
+            </div>
+           <span uitype="Button" label="执行测试" button_type="blue-button" on_click="execTest"></span>
+        </div>
+         <div position="bottom" height="200" style="position:relative;overflow: hidden;">
+            <div style="height: 10px"></div>
+            <div style="font-size: 14px;font-weight: bold;background-color: #00b7ee;">测试日志<img id="loadingImg" src="../images/loading.gif" style="margin-left:10px;"/></div>
+            <div id="log" class="console-output" style="height:80%;overflow: auto;"></div>
+         </div>
+    </div>
+</body>
+<script language="javascript">
+    var editor;
+    var container = document.getElementById('code');
+    var options = {
+        modes: ['text', 'tree'],
+        schema: {
+          	type: "object"
+        }
+    };
+    require([ 'jquery', 'jadp-cookie','jadp-login','jsoneditor','ajax-api'], function ( $, jcookie, jlogin,JSONEditor,japi) {
+        $(document).ready(function($) {
+            comtop.UI.scan();
+            editor = new JSONEditor(container, options,{account:'jiyanadmin',password:'abcdefg'});
+            $('#loadingImg').hide();
+            $('#log').bind('DOMNodeInserted', function(e) {
+                var top = $("#log")[0].scrollHeight;
+                if(top > 0){
+                    $("#log").scrollTop(top);
+                }
+            });
+        });
+
+        window.execTest = function() {
+            var loading =  $('#loadingImg');
+            var logger =  $('#log');
+            loading.show();
+            logger.empty();
+            logger.append("<pre>正在执行云平台单点登录测试......</pre>");
+            logger.append("<pre>获取用户输入的云平台登录用户和密码。</pre>");
+            var user = editor.get();
+            logger.append("<pre>用户输入的用户名和密码为："+JSON.stringify(user)+"</pre>");
+            logger.append("<pre>正在执行校验数据的合法性......</pre>");
+            if(!user || !user.account || !user.password){
+                cui.message('请输入登录用户的用户名和密码！', 'error', {fullMask:true });
+                logger.append("<pre style='color: red'>检查到当前输入的用户名数据不正确。当前用户数据为："+ JSON.stringify(user) +"。</pre>");
+                loading.hide();
+                return false;
+            }
+            logger.append("<pre>数据合法，正在验证用户测试配置......</pre>");
+            var valid = window.validater.validAllElement();
+            if(!valid[2]){
+                var msg = '';
+                for(var i in valid[0]){
+                    msg += "<pre style='color: red'>"+ valid[0][i].message +"。</pre>"
+                }
+                logger.append(msg);
+                loading.hide();
+                return false;
+            }
+            var cloudUrl = cui("#cloud").getValue();
+            var cccUrl =  cui("#ccc").getValue();
+            logger.append("<pre>用户测试配置合法，正在登录云平台......</pre>");
+            jlogin.setBaseUrl(cloudUrl);
+            jlogin.login(user).success(function (result) {
+                if(result.code == '1') {  // 认证成功
+                    //登录成功后处理业务
+                    setCookie("access-token",result.token,1);
+                    logger.append("<pre>登录AAA成功，当前AccessToken为："+result.token+"。</pre>");
+                    loading.hide();
+                    var url = cccUrl+"?access-token=" + result.token;
+                    logger.append("<pre>正在访问XXX系统首页......</pre>");
+                    japi._server = '';
+                    japi.get('text',cccUrl, true, function(data, status, xhr){
+                        logger.append("<pre>测试访问XXX成功！</pre>");
+                        loading.hide();
+                        window.open(url,"_blank");
+                        return true;
+                    }, function(xhr, status, err){
+                        logger.append("<pre style='color: red'>测试访问xxx失败！</pre>");
+                        logger.append("<pre style='color: red'>"+ err +"</pre>");
+                        loading.hide();
+                        return false;
+                    })
+                }else {
+                    cui.message(result.msg, 'error', {fullMask:true });
+                    logger.append("<pre style='color: red'>登录XXX失败："+ result.msg +"。</pre>");
+                    loading.hide();
+                    return false;
+                }
+            }).fail(function(xhr,status,err) {
+                cui.message('服务器发生错误，请稍后在尝试', 'error', {fullMask:true });
+                logger.append("<pre style='color: red'>服务器发生错误，请稍后在尝试。</pre>").append("<pre style='color: red'>"+err+"</pre>")
+                    .append("<pre style='color: red'>"+xhr.responseText+"</pre>");;
+                loading.hide();
+                return false;
+            });
+        };
+    });
+
+    // 原生 JavaScript 设置 cookie 值
+    function setCookie(name, value, time) {
+        var now = new Date();
+        var offset = 8;
+        var utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+        var nd = utc + (3600000 * offset);
+        var exp = new Date(nd);
+        var domain = document.domain;
+        exp.setTime(exp.getTime() + time * 60 * 60 * 1000);
+        document.cookie = name + "=" + escape(value) + ";path=/;expires=" + exp.toGMTString() + ";domain=" + domain + ";"
+    }
+</script>
+</html>
